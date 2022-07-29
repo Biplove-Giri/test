@@ -34,6 +34,6 @@ EOF
 
 output "arn" {
   description = "AWS SecretManager Secret ARN"
-  value       = aws_secretsmanager_secret.secret.arn
+  value       = aws_secretsmanager_secret.example.arn
 }
 
