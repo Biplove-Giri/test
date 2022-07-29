@@ -11,7 +11,37 @@ provider "aws" {
   region  = "us-east-1"
 }
 
+ 
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "_%@"
+}
+ 
 resource "aws_secretsmanager_secret" "example" {
   name = "example"
 }
+
+resource "aws_secretsmanager_secret_version" "sversion" {
+  secret_id = aws_secretsmanager_secret.example.id
+  secret_string = <<EOF
+   {
+    "username": "adminaccount",
+    "password": "${random_password.password.result}"
+   }
+EOF
+}
+
+data "aws_secretsmanager_secret" "example" {
+  arn = aws_secretsmanager_secret.example.arn
+}
+
+data "aws_secretsmanager_secret_version" "creds" {
+  secret_id = data.aws_secretsmanager_secret.example.arn
+}
+
+locals {
+  db_creds = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)
+}
+
 
