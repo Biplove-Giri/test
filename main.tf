@@ -32,7 +32,7 @@ resource "aws_secretsmanager_secret_version" "sversion" {
 EOF
 }
 
-output "AWS SecretManager Secret ARN" {
+output "arn" "AWS Secret Manager ARN" {
   description = "AWS SecretManager Secret ARN"
   value       = aws_secretsmanager_secret.example.arn
 }
